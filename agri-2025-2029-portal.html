@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>B.Tech Agricultural Engineering — Batch 2025-2029</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --field:#1F4D3D;
+    --field-deep:#123329;
+    --wheat:#C9A227;
+    --cream:#F7F4EC;
+    --panel:#FFFFFF;
+    --ink:#20261F;
+    --ink-soft:#5C6459;
+    --line:#DDD7C4;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--cream);color:var(--ink);font-family:'Inter',sans-serif;min-height:100vh;}
+
+  /* ---- Login screen ---- */
+  #loginScreen{
+    min-height:100vh;
+    display:flex;align-items:center;justify-content:center;
+    background:
+      radial-gradient(circle at 20% 20%, rgba(201,162,39,0.10), transparent 45%),
+      var(--field-deep);
+    padding:20px;
+  }
+  .login-card{
+    background:var(--panel);
+    border-radius:14px;
+    padding:40px 36px;
+    max-width:380px;
+    width:100%;
+    box-shadow:0 30px 60px rgba(0,0,0,0.35);
+    text-align:center;
+  }
+  .crest{
+    width:56px;height:56px;margin:0 auto 16px;
+    border:2px solid var(--field);
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Playfair Display',serif;font-weight:700;color:var(--field);
+  }
+  .login-card h1{
+    font-family:'Playfair Display',serif;
+    font-size:19px;
+    margin:0 0 4px;
+    color:var(--field-deep);
+  }
+  .login-card p.sub{
+    font-size:12.5px;color:var(--ink-soft);margin:0 0 22px;
+    font-family:'JetBrains Mono',monospace;letter-spacing:0.4px;
+  }
+  .login-card input{
+    width:100%;
+    padding:12px 14px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    font-size:14px;
+    margin-bottom:12px;
+    font-family:'Inter',sans-serif;
+  }
+  .login-card button{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    background:var(--field);
+    color:#fff;
+    font-weight:600;
+    font-size:14px;
+    cursor:pointer;
+  }
+  .login-card button:hover{background:var(--field-deep);}
+  .login-error{color:#B3402A;font-size:12.5px;min-height:16px;margin-top:8px;}
+  .login-note{margin-top:18px;font-size:11px;color:var(--ink-soft);line-height:1.5;}
+
+  /* ---- Portal ---- */
+  #portal{display:none;}
+  header{
+    background:var(--field);
+    color:#fff;
+    padding:20px 28px;
+    border-bottom:4px solid var(--wheat);
+  }
+  header .top-row{display:flex;justify-content:space-between;align-items:center;max-width:900px;margin:0 auto;flex-wrap:wrap;gap:10px;}
+  header h1{font-family:'Playfair Display',serif;font-size:20px;margin:0;font-weight:700;}
+  header p{margin:2px 0 0;font-size:12px;color:#D8E6DE;font-family:'JetBrains Mono',monospace;letter-spacing:0.4px;}
+  .logout{
+    background:transparent;border:1px solid rgba(255,255,255,0.5);color:#fff;
+    padding:7px 14px;border-radius:6px;font-size:12.5px;cursor:pointer;
+  }
+
+  main{max-width:760px;margin:0 auto;padding:32px 20px 60px;}
+  .search-panel{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:24px;
+    margin-bottom:24px;
+  }
+  .search-panel label{font-size:12.5px;color:var(--ink-soft);font-family:'JetBrains Mono',monospace;letter-spacing:0.4px;}
+  .search-row{display:flex;gap:10px;margin-top:8px;}
+  .search-row input{
+    flex:1;padding:12px 14px;border:1px solid var(--line);border-radius:8px;
+    font-family:'JetBrains Mono',monospace;font-size:14px;
+  }
+  .search-row button{
+    padding:0 22px;border:none;border-radius:8px;background:var(--wheat);
+    color:var(--field-deep);font-weight:600;cursor:pointer;font-size:13.5px;
+  }
+  .hint{font-size:11.5px;color:var(--ink-soft);margin-top:10px;}
+
+  .result-card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:12px;
+    overflow:hidden;
+    display:none;
+  }
+  .result-head{
+    background:var(--field-deep);
+    color:#fff;padding:18px 24px;
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;
+  }
+  .result-head .name{font-family:'Playfair Display',serif;font-size:19px;font-weight:700;}
+  .result-head .regno{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--wheat);}
+  .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;}
+  .detail{padding:16px 24px;border-bottom:1px solid var(--line);}
+  .detail:nth-last-child(2), .detail:last-child{border-bottom:none;}
+  .detail .label{font-size:11px;text-transform:uppercase;letter-spacing:0.6px;color:var(--ink-soft);font-family:'JetBrains Mono',monospace;}
+  .detail .value{font-size:15px;font-weight:600;margin-top:3px;}
+  .not-found{
+    display:none;
+    background:#FBEFE9;border:1px solid #E7C3B2;color:#8A3D26;
+    padding:16px 20px;border-radius:10px;font-size:14px;
+  }
+  footer{text-align:center;padding:20px;font-size:11.5px;color:var(--ink-soft);}
+</style>
+</head>
+<body>
+
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="crest">AE</div>
+    <h1>Agricultural Engineering</h1>
+    <p class="sub">BATCH 2025–2029 · STUDENT PORTAL</p>
+    <input type="password" id="passwordInput" placeholder="Enter access password" onkeydown="if(event.key==='Enter')tryLogin()">
+    <button onclick="tryLogin()">Enter Portal</button>
+    <div class="login-error" id="loginError"></div>
+    <div class="login-note">This portal shows academic details only (name, register number, batch status). Personal records such as ID numbers and addresses are not published here.</div>
+  </div>
+</div>
+
+<div id="portal">
+  <header>
+    <div class="top-row">
+      <div>
+        <h1>Agricultural Engineering</h1>
+        <p>B.TECH · BATCH 2025–2029</p>
+      </div>
+      <button class="logout" onclick="logout()">Log out</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="search-panel">
+      <label>LOOK UP BY REGISTER NUMBER</label>
+      <div class="search-row">
+        <input type="text" id="regInput" placeholder="e.g. 712925225006" onkeydown="if(event.key==='Enter')lookup()">
+        <button onclick="lookup()">Search</button>
+      </div>
+      <div class="hint">Enter your 12-digit register number exactly as printed on your admission documents.</div>
+    </div>
+
+    <div class="not-found" id="notFound">No record found for that register number. Double-check the digits, or contact the department office.</div>
+
+    <div class="result-card" id="resultCard">
+      <div class="result-head">
+        <div class="name" id="rName"></div>
+        <div class="regno" id="rReg"></div>
+      </div>
+      <div class="detail-grid">
+        <div class="detail"><div class="label">Gender</div><div class="value" id="rGender"></div></div>
+        <div class="detail"><div class="label">Blood Group</div><div class="value" id="rBlood"></div></div>
+        <div class="detail"><div class="label">Residence Status</div><div class="value" id="rHostel"></div></div>
+        <div class="detail"><div class="label">Admission Type</div><div class="value" id="rAdmission"></div></div>
+        <div class="detail"><div class="label">Admitted Date</div><div class="value" id="rDate"></div></div>
+        <div class="detail"><div class="label">Batch</div><div class="value">2025 – 2029</div></div>
+      </div>
+    </div>
+  </main>
+
+  <footer>Agricultural Engineering Department · Batch 2025–2029</footer>
+</div>
+
+<script>
+const PASSWORD = "AGRI2029";
+
+const STUDENTS = [
+  {reg:"712925225001", name:"Abinaya M", gender:"Female", blood:"B+ve", hostel:"Hosteller", admission:"Regular", date:"31.08.2025"},
+  {reg:"712925225003", name:"Anupriya M", gender:"Female", blood:"B+ve", hostel:"Hosteller", admission:"Regular", date:"31.08.2025"},
+  {reg:"712925225006", name:"Dhamodharan R", gender:"Male", blood:"O+", hostel:"Hosteller", admission:"Regular", date:"31.08.2025"},
+  {reg:"712925225008", name:"Gokul M", gender:"Male", blood:"A+", hostel:"Dayscholar", admission:"Regular", date:"31.08.2025"},
+  {reg:"712925225010", name:"Hasanmuki U", gender:"Male", blood:"B+", hostel:"Hosteller", admission:"Regular", date:"31.08.2025"},
+  {reg:"712925225011", name:"Janani K", gender:"Female", blood:"B+", hostel:"Dayscholar", admission:"Regular", date:"31.08.2025"},
+  {reg:"712925225012", name:"Jeeva A", gender:"Male", blood:"B+", hostel:"Hosteller", admission:"Regular", date:"31.08.2025"},
+  {reg:"712925225013", name:"Jegan S", gender:"Male", blood:"O+", hostel:"—", admission:"IR", date:"31.08.2025"},
+  {reg:"712925225014", name:"Khirisha P", gender:"Female", blood:"B+ve", hostel:"Hosteller", admission:"Regular", date:"31.08.2025"},
+  {reg:"712925225015", name:"Nila S", gender:"Female", blood:"AB+ve", hostel:"Hosteller", admission:"Regular", date:"31.08.2025"},
+  {reg:"712925225016", name:"Nishanth A", gender:"Male", blood:"A+", hostel:"Dayscholar", admission:"Regular", date:"31.08.2025"},
+  {reg:"712925225017", name:"Om Prakash E", gender:"Male", blood:"B+", hostel:"Dayscholar", admission:"Regular", date:"31.08.2025"},
+  {reg:"712925225019", name:"Pranesh S", gender:"Male", blood:"O+", hostel:"Dayscholar", admission:"Regular", date:"31.08.2025"},
+  {reg:"712925225020", name:"Sadhana A", gender:"Female", blood:"O+", hostel:"Dayscholar", admission:"Regular", date:"31.08.2025"},
+  {reg:"712925225021", name:"Santhosh R", gender:"Male", blood:"O+", hostel:"Dayscholar", admission:"Regular", date:"31.08.2025"},
+  {reg:"712925225022", name:"Santhosh R", gender:"Male", blood:"O+", hostel:"Hosteller", admission:"Regular", date:"31.08.2025"},
+  {reg:"712925225023", name:"Thirumoorthi S", gender:"Male", blood:"B+", hostel:"Dayscholar", admission:"Regular", date:"31.08.2025"},
+  {reg:"712925225024", name:"Thirukumaran G", gender:"Male", blood:"B+", hostel:"Dayscholar", admission:"Regular", date:"31.08.2025"},
+];
+
+function tryLogin(){
+  const val = document.getElementById('passwordInput').value;
+  if(val === PASSWORD){
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('portal').style.display = 'block';
+  } else {
+    document.getElementById('loginError').textContent = "Incorrect password. Please try again.";
+  }
+}
+
+function logout(){
+  document.getElementById('portal').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('passwordInput').value = '';
+  document.getElementById('loginError').textContent = '';
+  document.getElementById('resultCard').style.display = 'none';
+  document.getElementById('notFound').style.display = 'none';
+  document.getElementById('regInput').value = '';
+}
+
+function lookup(){
+  const q = document.getElementById('regInput').value.trim();
+  const s = STUDENTS.find(st => st.reg === q);
+  const card = document.getElementById('resultCard');
+  const nf = document.getElementById('notFound');
+  if(!s){
+    card.style.display = 'none';
+    nf.style.display = 'block';
+    return;
+  }
+  nf.style.display = 'none';
+  document.getElementById('rName').textContent = s.name;
+  document.getElementById('rReg').textContent = s.reg;
+  document.getElementById('rGender').textContent = s.gender;
+  document.getElementById('rBlood').textContent = s.blood;
+  document.getElementById('rHostel').textContent = s.hostel;
+  document.getElementById('rAdmission').textContent = s.admission;
+  document.getElementById('rDate').textContent = s.date;
+  card.style.display = 'block';
+}
+</script>
+</body>
+</html>
